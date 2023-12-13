@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {InjectionToken, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -11,6 +11,23 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import { ToasterComponent } from './shared/components/toaster.component';
 import { CounterComponent } from './shared/components/counter.component';
+import { BlinkDirective } from './shared/directives/blink.directive';
+import { BoxComponent } from './shared/components/box.component';
+import { OddEvenDirective } from './shared/directives/odd-even.directive';
+import { StopDirective } from './shared/directives/stop.directive';
+import { ModalDirective } from './shared/directives/modal.directive';
+import { MyIfDirective } from './shared/directives/my-if.directive';
+import { RepeatDirective } from './shared/directives/repeat.directive';
+import { ObjForDirective } from './shared/directives/obj-for.directive';
+import { RateComponent } from './shared/components/rate.component';
+import { RateItemComponent } from './shared/components/rate-item.component';
+import {AuthService} from './shared/services/auth.service';
+import {Auth2Service} from './shared/services/auth2.service';
+
+const auth = new Auth2Service();
+
+export const token = new InjectionToken<string>('token');
+
 
 @NgModule({
   declarations: [
@@ -20,7 +37,17 @@ import { CounterComponent } from './shared/components/counter.component';
     ChartDirective,
     QuitModalComponent,
     ToasterComponent,
-    CounterComponent
+    CounterComponent,
+    BlinkDirective,
+    BoxComponent,
+    OddEvenDirective,
+    StopDirective,
+    ModalDirective,
+    MyIfDirective,
+    RepeatDirective,
+    ObjForDirective,
+    RateComponent,
+    RateItemComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +56,11 @@ import { CounterComponent } from './shared/components/counter.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {provide: AuthService, useValue: auth},
+    {provide: token, useValue: 'pippo', multi: true},
+    {provide: token, useValue: 'pluto', multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

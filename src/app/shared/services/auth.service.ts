@@ -6,7 +6,7 @@ export interface AuthState {
   role: 'admin' | 'user';
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class AuthService {
   private state$ = new BehaviorSubject<AuthState | null>(null);
   public isLogged$ = this.state$.pipe(map(s => !!s));
