@@ -1,66 +1,18 @@
 
 
+<h1>{{count$ | async}}</h1>
 
-<!--<h1 *ngIf="show" ngBlink="{{time}}">Hello!</h1>-->
-<!--<h2>prova</h2>-->
-<!--<button (click)="show = !show">toggle</button>-->
+<button class="btn btn-primary" (click)="up()">
+  <i class="fa fa-plus"></i>
+</button>
 
-<!--<button (click)="time = '100'">100</button>-->
-<!--<button (click)="time = '200'">500</button>-->
-<!--<button (click)="time = '1000'">1000</button>-->
+<button class="btn btn-primary" (click)="down()">
+  <i class="fa fa-minus"></i>
+</button>
 
-<!--<p>{{time}}</p>-->
-
-<!--<div class="box numbers">-->
-<!--  <h1 [ngOddEven]="item" class="number" *ngFor="let item of items">{{item}}</h1>-->
-<!--</div>-->
-
-<!--<app-button-panel></app-button-panel>-->
-
-<!--<canvas chart></canvas>-->
+<button class="btn btn-primary" (click)="rnd()">
+  random
+</button>
 
 
-
-<!--<dialog [ngModal]="show">-->
-<!--  <app-quit-modal (cancel)="show = false"></app-quit-modal>-->
-<!--</dialog>-->
-
-<!--<button class="btn btn-primary" (click)="show = !show">toggle</button>-->
-
-<!--<h1 *ngMyIf="show">ciao!</h1>-->
-
-<!--<ng-template [ngMyIf]="show">-->
-<!--  <h1>ciao!</h1>-->
-<!--</ng-template>-->
-
-<!--<ul>-->
-<!--&lt;!&ndash;  <ng-template ngRepeat [ngRepeatFrom]="2" [ngRepeatTo]="10" let-banana let-o="odd">&ndash;&gt;-->
-<!--&lt;!&ndash;    <li>item {{banana * 10}} - {{o}}</li>&ndash;&gt;-->
-<!--&lt;!&ndash;  </ng-template>&ndash;&gt;-->
-<!--  <li *ngRepeat="let banana from 3 to 15 as pippo; let o=odd">-->
-<!--    item {{banana * 10}} - {{o}} &ndash;&gt; {{pippo}}-->
-<!--  </li>-->
-<!--</ul>-->
-
-<!--<div *ngIf="show; else tpl">prova</div>-->
-
-<!--<ng-template #tpl>ciao</ng-template>-->
-
-<!--<li *ngObjFor="let item of prova">{{item}}</li>-->
-
-<form [formGroup]="form" (ngSubmit)="save()">
-  <input type="text" formControlName="one"><br/>
-  <input type="text" formControlName="two"><br/>
-  <ng-rate formControlName="rate"></ng-rate>
-  <input type="submit" value="salva">
-</form>
-
-
-
-
-<pre>{{form.valueChanges | async | json}}</pre>
-
-<input type="text" placeholder="cerca" [formControl]="search">
-
-<pre>{{searchValue$ | async | json}}</pre>
-
+<h1>{{pippo$ | async}}</h1>

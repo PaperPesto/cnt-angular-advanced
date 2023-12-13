@@ -1,8 +1,8 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, NgForm} from '@angular/forms';
-import {token} from '../../app.module';
-import {debounceTime, distinctUntilChanged, from, map, switchMap} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+import {counterActions} from '../../shared/store/actions/counter.actions';
+import {counterFeature} from '../../shared/store/reducers/counter.reducer';
+import {counterValueLabelSelector} from '../../shared/store/selectors/counter.selectors';
 
 type myToken = string | Array<string>;
 
@@ -12,61 +12,53 @@ type myToken = string | Array<string>;
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent{
-  public items: Array<number> = [];
-  public value = 1;
-  public show = false;
-  public time = '1000';
+  public count = 0;
+  public count$ = this.store.select(counterFeature.selectValue);
+  public label$ = this.store.select(counterFeature.selectLabel);
+  public counterState$ = this.store.select(counterFeature.selectCounterState);
+  public pippo$ = this.store.select(counterValueLabelSelector);
 
-  public form: FormGroup;
-  public search = new FormControl('');
-  public searchValue$ = this.search.valueChanges.pipe(
-    debounceTime(500),
-    distinctUntilChanged(),
-    switchMap(text =>
-      this.http.get('https://jsonplaceholder.typicode.com/users').pipe(
-        map((users: any) => {
-          return users.filter((x: any) => x.username.startsWith(text));
-        })
-      )
-    )
-  );
+  constructor(private store: Store) {
 
-  public prova = {
-    ciao: 'ciao',
-    nome: 'pippo',
-    age: 42
+    // const ciccio = this.store.pipe(
+    //   map((x: any) => x.counter.label),
+    //   distinctUntilChanged(),
+    //   tap(x => console.log('aaaa'))
+    // )
+    //
+    // ciccio.subscribe(x => {
+    //   console.log('label 2', x);
+    // });
+    //
+    // ciccio.subscribe(x => {
+    //   console.log('label 3', x);
+    // });
+
+
+    this.count$.subscribe(x => {
+      console.log('count', x);
+    });
+
+    this.label$.subscribe(x => {
+      console.log('label', x);
+    });
+
+    this.label$.subscribe(x => {
+      console.log('label 2', x);
+    });
   }
 
-  @ViewChild('dlg') dlg!: ElementRef<HTMLDialogElement>
-
-  constructor(@Inject(token) tkn: myToken, private fb: FormBuilder, private http: HttpClient) {
-    if(Array.isArray(tkn)) {
-      for (const t of tkn) {
-        console.log(t);
-      }
-    } else {
-      console.log('tkn', tkn);
-    }
-    for (let i = 0; i < 10; i++) {
-      this.items.push(i);
-    }
-
-  this.form = this.fb.group({
-    one: [''],
-    two: [''],
-    rate: [2]
-  });
-
+  public up() {
+    this.store.dispatch(counterActions.increment());
   }
 
-  // public showDialog() {
-  //   this.dlg.nativeElement.showModal();
-  //
-  // }
+  public down() {
+    this.store.dispatch(counterActions.decrement());
+  }
 
-  public save() {
-
-    console.log('save', this.form.value);
+  public rnd() {
+    const value = Math.random().toString();
+    this.store.dispatch(counterActions.setLabel({value}));
   }
 
 }
