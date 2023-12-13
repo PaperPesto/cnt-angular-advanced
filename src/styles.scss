@@ -1,1 +1,65 @@
 /* You can add global styles to this file, and also import other style files */
+
+h1 {
+  font-size: 80px;
+}
+
+.box {
+  padding: 20px;
+  border: 8px solid red;
+}
+
+
+.numbers {
+  width: 800px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.numbers > h1 {
+  margin: 10px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 8px solid green;
+}
+
+
+.toaster {
+  background-color: #f61f30;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.toaster > i {
+  align-self: end;
+  font-size: 25px;
+  margin: 10px 10px 0 0;
+}
+
+.toaster > .message {
+  margin: 0 20px;
+  height: 60px;
+}
+
+.toaster > .prog {
+  background-color: wheat;
+  height: 5px;
+}
+
+
+.counter {
+  width: 220px;
+  display: flex;
+  flex-direction: row;
+
+}
