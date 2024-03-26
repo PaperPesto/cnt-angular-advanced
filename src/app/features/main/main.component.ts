@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'ng-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
   public items: Array<number> = [];
   public value = 0;
+  show = false;
+  // @ViewChild('dlg') dlg!: ElementRef<HTMLDialogElement>
 
   constructor() {
     for (let i = 0; i < 10; i++) {
@@ -15,4 +17,8 @@ export class MainComponent {
     }
   }
 
+  openDialog(){
+    // this.dlg.nativeElement.showModal();
+    this.show = true
+  }
 }

@@ -1,7 +1,24 @@
-
-<h1>Hello!</h1>
+<!-- <h1 *ngIf="show" ngBlink>Hello!</h1>
+<h2>prova</h2>
+<button (click)="show = !show">toggle</button> -->
 
 <!--<div class="box numbers">-->
 <!--  <h1 class="number" *ngFor="let item of items">{{item}}</h1>-->
 <!--</div>-->
 
+<!-- <dialog [ngDialog]="show">
+    <app-quit-modal (cancel)="show = false"></app-quit-modal>
+</dialog> -->
+
+<button class="btn btn-primary" (click)="show = !show"></button>
+
+<!-- <ng-template [ngMyIf]="show">
+  <h1>Ciao!</h1>
+</ng-template> -->
+
+
+<ul>
+    <ng-template ngRepeat [ngRepeatFrom]="2" [ngRepeatTo]="10" let-banana="value">
+        <li>item {{banana * 10}}</li>
+    </ng-template>
+</ul>

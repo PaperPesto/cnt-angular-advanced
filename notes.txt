@@ -1,0 +1,162 @@
+Corso contralto enrico 13/12/2023
+----------------------------------
+una directive è un componente senza template
+
+- directive attribute -> non modificano il DOM su cui sono applicate
+- directive strutturali -> modificano il DOM su cui sono applicate
+
+vecchio attributo "blink" per lampeggiare una scritta ogni mezzo secondo. il blink vecchio nascondeva il pezzo HTML
+
+- angulare creazione directive
+ng generate directive shared/directives/blink
+LA @Directive non ha template!
+
+Dato che la directive create è attribute, posso far iniettare ad angular l'html della direttiva
+
+Le directive hanno il ciclo di vita al pari dei componenti. Una volta assegnata una directive con un setInterval dobbiamo eliminarla con l'equivalente di ngdestroy.
+
+- @HostBinding('style.opacity') aggiunge una classe al template su cui viene applicata
+- @HostBinding('class') class = 'pippo' -> attacca la classe pippo al pezzo di template
+
+Metodi per unsubscribe di obsevable
+-----------------------------------
+1. metodo 1
+conts sub = new Subscription()
+sub.add(observable.subscribe())
+e poi sub.unsubscribe()
+
+2. metodo 2
+takeUntil -> fa completare l'observable
+
+3. metodo 3
+takeUntilDestroyed() -> fa takeUntil sull'ngOnDestroy di un componente, esportato da angular
+
+- Voglio fare il tempo di blink parametrico:
+uso un @Input() time: number = 1000;
+altrimenti metto direttamente @Input() ngBlink come il nome della direttiva in modo che possa passare il valore direttamente così [ngBlink]='1000' se lo definisco così
+@Input() ngBlink: number;
+
+- Binding
+[ngBlink]='time' oppure ngBlink='{{time}}'
+
+- Wrapping di componenti, se avevo delle proprietà bindate le metto in @Input del componente.
+
+- Applicazione di una directive su un ngFor che non rompe il css e la struttura (caso dei quadrati colorati)
+
+- stopPropagation non rilancia l'evento verso i componenti ancestors
+crea una directive [ngStop]
+
+@Directive({selector: '[ngStop]'})
+e nel costruttore constructor(private el: ElementRef<HTMLElement>){
+    this.el.nativElement.addEventListener('click', e => e.stopPropagation())
+}
+
+Come c'è l'HostBinding, c'è anche l'HostListener
+@HostListener('click', ['$event']) clicked(e: Event): void {
+    console.log(e)
+    e.stopPropagation();
+}
+
+@HostBinding e @HostListener sono modi per attaccarsi alle proprietà e agli eventi
+
+---------------------
+DIRECTIVE STRUTTURALI
+---------------------
+<ng-template> non renderizza nulla a livello di dom
+
+riscriviamo *ngFor = ngRepeat
+
+-- template
+<ul>
+    <ng-template ngRepeat [from]="2" [to]="10" let-banana="value">
+        <li>item {{banana * 10}}</li>
+    </ng-template>
+</ul>
+
+-- directive
+constructor(private tr: TemplateRef<any>, private vcr: ViewContainerRef) {
+    for (let i = this.from; i++; i < this.to) {
+      this.vcr.createEmbeddedView(this.tr, { value: i });
+    }
+  }
+
+this.tr è il contenuto del ng-template
+this.vcr è l'ng-template che posso riempire
+
+*ngRepeat con l'asterisco prende l'attuale elemento su cui è applicata la directive e lo wrappa con un ng-template, poi riapplica pari pari la logica di vcr.createEmbeddedView(tr)
+
+Ha anche creato una directive per iterare sulle proprietà di un oggetto, l'ha chiamato *ngForItem
+
+=====================
+ControlValueAccessory
+=====================
+
+providers: [{
+    provide: AuthService: AuthService, useClass: AuthService
+}]
+
+zucchero sintattico per
+
+providers: [AuthService]
+
+ci sono
+- useClass
+- useExisting -> dovrebbe fare un singleton
+- useFactory -> gli passi una factory
+- useValue -> gli passi direttamente il valore
+
+il "multi" serve per utilizzare tutte le istanze iniettate nel motore di DI come un array
+
+NG_VALUE_ACCESSOR è la chiave usata dal motore di DI per iniettare i ControlValueAccessory. Gli stiamo dicendo che il mio componentne che estende ControlValueAccessory deve essere aggiunto agli altri componenti che servono per i form.
+
+Infatti angular per creare i form va a pescare gli NG_VALUE_ACCESSOR dal motore (così come fa per i validatori).
+
+Stiamo facendo diventare un componente per dare le stelline, un componente in grado di essere inserito in un form! In pratica il nostro componente custom diventa tale e quale ad un input di un form e così usato correttamente.
+
+writeValue(obj: number) {
+
+}
+
+registerOnTouched(){}   -> input sporcato
+
+registerOnChange(){}
+
+La possiamo usare per |template driven form| ma anche per |formgroup|
+
+=> FIGO => <pre>{{form.valueChanges | async | json}}</pre>
+
+NOTA <pre> per qualche motivo lo rende piccolo
+
+::: STATE MANAGEMENT :::
+Angular non ha state management nativi perché ha i service di default che già forniscono il modo per accedere ad uno stato in modalità singleton.
+Altri framework come react hanno state management nativi.
+
+"SingleSourceOfTrouth" -> il mio stato è un oggetto enorme che contiene tutto lo stato
+"Stato atomico" -> lo stato aggiro per l'applicazione è atomico e delegato ai vari componenti.
+
+state management in angular
+1. ngrx
+2. ngxs
+3. akita (deprecato)
+4. elf
+
+ngrx è un po' meglio perché è standardizzato, nello specifico, i "side effects" sono standardizzati su ngrx.
+
+- per installarlo
+> npm i @ngrx/store@16
+> npm i -D @ngrx/store-devtools (la D serve per installarlo come devDependencies)
+
+Per inserire ngrx in angular, lo metto tra i providers del modulo
+providers: [
+    StoreModule.forRoot(),
+    StoreDevtoolsModule()
+]
+
+=========== seconda giornata ===========
+lastValueFrom(obs) -> restituisce una promise e prende il primo elemento pushato nell'observable
+firstValueFrom(obs) -> restituisce una promise e prende l'ultimo elemento pushato nell'observable
+
+switchMap(x => x) è zucchero sintattico per swtichMap(x => from(x))
+toArray() prende n emissioni e le wrappa in un array quando l'observable termina
+
+this.actions$ non deve mai essere completato e non ha senso catcharne le eccezioni
